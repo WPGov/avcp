@@ -6,6 +6,9 @@
         update_option( 'avcp_denominazione_ente', $get_avcp_denominazione_ente );
         $get_avcp_codicefiscale_ente = $_POST["avcp_codicefiscale_ente_n"];
         update_option( 'avcp_codicefiscale_ente', $get_avcp_codicefiscale_ente );
+
+        update_option( 'avcp_dataset_capability', $_POST['avcp_dataset_capability_n'] );
+
         if (isset($_POST['avcp_autopublish_n'])){
                 update_option('avcp_autopublish', '1');
             } else {
@@ -104,16 +107,6 @@
     echo '</tr>';
 
     echo '<tr>';
-    echo '<th><label>Ruoli & Permessi</label></th>';
-    echo '<td><input type="checkbox" name="avcp_abilita_ruoli_n" ';
-    $get_avcp_abilita_ruoli = get_option('avcp_abilita_ruoli');
-        if ($get_avcp_abilita_ruoli == '1') {
-            echo 'checked="checked" ';
-        }
-    echo '><span class="description">Le voci di AVCP ereditano i permessi di pubblicazione/modifica/eliminazione degli articoli. Se vuoi avere un maggior controllo abilita questa opzione e segui <a href="http://supporto.marcomilesi.ml/?p=571" target="_blank" title="Istruzioni per la configurazione di Ruoli & Permessi">questo tutorial</span></td>';
-    echo '</tr>';
-
-    echo '<tr>';
     echo '<th><label>Mostra un po\' di Amore</label></th>';
     echo '<td><input type="checkbox" name="avcp_showlove_n" ';
     $get_avcp_showlove = get_option('avcp_showlove');
@@ -147,6 +140,33 @@
         }
     echo '><span class="description">Abilita i link con la visualizzazione archivio su base annuale dei bandi</span></td>';
     echo '</tr>';
+
+    echo '</tbody></table>';
+
+    echo '<h2>Ruoli & Permessi</h2>
+    Queste impostazioni sono riservate a utenti avanzati.
+    <table class="form-table"><tbody>';
+
+    echo '<tr>';
+    echo '<th><label>Mappa Meta-Capacità</label></th>';
+    echo '<td><input type="checkbox" name="avcp_abilita_ruoli_n" ';
+    $get_avcp_abilita_ruoli = get_option('avcp_abilita_ruoli');
+        if ($get_avcp_abilita_ruoli == '1') {
+            echo 'checked="checked" ';
+        }
+    echo '><span class="description">Le voci del plugin ereditano i permessi degli articoli.<br>Se vuoi avere un maggior controllo abilita questa opzione e segui <a href="http://supporto.marcomilesi.ml/?p=571" target="_blank" title="Istruzioni per la configurazione di Ruoli & Permessi">questo tutorial</span></td>';
+    echo '</tr>';
+
+    echo '<tr>';
+    echo '<th><label>Meta-Capacità per Dataset</label></th>';
+    echo '<td><input type="text" name="avcp_dataset_capability_n" value="';
+    if (!get_option('avcp_dataset_capability')) {
+        echo 'manage_options';
+    } else { echo get_option('avcp_dataset_capability'); }
+    echo '" class="regular-text">';
+    echo '<span class="description"> Inserire la capacità richiesta per la visualizzazione del menù "Dataset XML" e "Log"<br>(default "manage_options")</span></td>';
+    echo '</tr>';
+
 
     echo '</tbody></table>';
 

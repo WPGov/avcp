@@ -4,7 +4,7 @@ Plugin Name: ANAC XML Bandi di Gara (AVCP)
 Plugin URI: http://www.wpgov.it
 Description: Generatore XML per ANAC (ex AVCP) e gestione bandi di gara e contratti (Legge 190/2012 art. 1.32 & D.Lgs 33/2013)
 Author: Marco Milesi
-Version: 6.0
+Version: 6.1
 Author URI: http://www.marcomilesi.ml
 */
 
@@ -311,9 +311,17 @@ function crea_anni() {
 
 add_action('admin_menu', 'avcp_menu');
 function avcp_menu() {
-    add_submenu_page('edit.php?post_type=avcp', 'Dataset XML AVCP', 'Dataset XML AVCP', 'manage_options', 'avcp_v_dataset', 'avcp_v_dataset_load'); //valid_page.php
-    add_submenu_page('edit.php?post_type=avcp', 'Importa', 'Importa', 'manage_options', 'anac_import', 'anac_import_load'); //pannelli/log.php
-    add_submenu_page('edit.php?post_type=avcp', 'Log', 'Log', 'manage_options', 'anac_log', 'anac_log_load'); //pannelli/log.php
+
+    add_submenu_page('edit.php?post_type=avcp', 'Importa', 'Importa', 'manage_options', 'anac_import', 'anac_import_load');
+
+     if (!get_option('avcp_dataset_capability')) {
+         $anac_menu_cap = 'manage_options';
+    } else {
+         $anac_menu_cap = get_option('avcp_dataset_capability');
+     }
+
+    add_submenu_page('edit.php?post_type=avcp', 'Dataset XML AVCP', 'Dataset XML AVCP',  $anac_menu_cap, 'avcp_v_dataset', 'avcp_v_dataset_load'); //valid_page.php
+    add_submenu_page('edit.php?post_type=avcp', 'Log', 'Log',  $anac_menu_cap, 'anac_log', 'anac_log_load'); //pannelli/log.php
 }
 
 function avcp_activate() {

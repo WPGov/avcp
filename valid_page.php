@@ -34,9 +34,9 @@ function avcp_v_dataset_load()
     <a href="' . get_site_url() . '/avcp/2013.xml' . '" target="_blank">2012+2013</a> &bull;
     <a href="' . get_site_url() . '/avcp/2014.xml' . '" target="_blank">2014</a> &bull;
     <a href="' . get_site_url() . '/avcp/2015.xml' . '" target="_blank">2015</a> &bull;
-    <a href="' . get_site_url() . '/avcp/2015.xml' . '" target="_blank">2016</a> &bull;
-    <a href="' . get_site_url() . '/avcp/2015.xml' . '" target="_blank">2017</a> &bull;
-    <a href="' . get_site_url() . '/avcp/2015.xml' . '" target="_blank">2018</a>
+    <a href="' . get_site_url() . '/avcp/2016.xml' . '" target="_blank">2016</a> &bull;
+    <a href="' . get_site_url() . '/avcp/2017.xml' . '" target="_blank">2017</a> &bull;
+    <a href="' . get_site_url() . '/avcp/2018.xml' . '" target="_blank">2018</a>
     </p>';
 
     echo '</div>';

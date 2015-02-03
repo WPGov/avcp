@@ -1,23 +1,23 @@
 <?php
-setlocale(LC_ALL, array('it_IT.UTF-8','it_IT@euro','it_IT','italian'));
+setlocale(LC_ALL, array(
+    'it_IT.UTF-8',
+    'it_IT@euro',
+    'it_IT',
+    'italian'
+));
 // Free PHP File Directory Listing Script - Version 1.4 - HalGatewood.com
 // Edited for AVCP/ANAC XML compatiblity by MARCO MILESI - WPGOV - wpgov.it
 
-// ADD SPECIFIC FILES YOU WANT TO IGNORE HERE
-$ignore_file_list = array(".", "Thumbs.db", ".DS_Store", "index.php", "icons.png", "indice.xml", ".ftpquota");
-
-// ADD SPECIFIC FILE EXTENSIONS YOU WANT TO IGNORE HERE
-$ignore_ext_list = array();
-
-setlocale(LC_ALL, array('it_IT.UTF-8','it_IT@euro','it_IT','italian'));
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <title>ANAC XML</title>
-    <?php $urlcompleto = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-    $url = substr_replace($urlcompleto, "", -5); ?>
+<?php 
+$urlcompleto = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+$url         = substr_replace($urlcompleto, "", -5); 
+?>
     <style>
         body { font-family: 'Open Sans', sans-serif; padding: 0; margin: 0; background: #f5f5f5 url('<?php echo $url; ?>wp-content/plugins/avcp/includes/bandieraitaliana.png') no-repeat center; }
         .wrap { width: 515px; margin: 4em auto 1em auto; background: white; padding: 25px; border: solid 1px #ECE9E9; -moz-border-radius: 10px; -webkit-border-radius: 10px; }
@@ -67,66 +67,48 @@ function cleanTitle($title)
 
 function getFileExt($filename)
 {
-    return substr(strrchr($filename,'.'),1);
+    return substr(strrchr($filename, '.'), 1);
 }
 
 function format_size($file)
 {
     $bytes = filesize($file);
-    if ($bytes < 1024) return '<strong>'.$bytes.'</strong> byte';
-    elseif ($bytes < 1048576) return '<strong>'.round($bytes / 1024, 2).'</strong> KB';
-    elseif ($bytes < 1073741824) return '<strong>'.round($bytes / 1048576, 2).'</strong> MB';
-    elseif ($bytes < 1099511627776) return '<strong>'.round($bytes / 1073741824, 2).'</strong> GB';
-    else return '<strong>'.round($bytes / 1099511627776, 2).'</strong> TB';
+    if ($bytes < 1024)
+        return '<strong>' . $bytes . '</strong> byte';
+    elseif ($bytes < 1048576)
+        return '<strong>' . round($bytes / 1024, 2) . '</strong> KB';
+    elseif ($bytes < 1073741824)
+        return '<strong>' . round($bytes / 1048576, 2) . '</strong> MB';
+    elseif ($bytes < 1099511627776)
+        return '<strong>' . round($bytes / 1073741824, 2) . '</strong> GB';
+    else
+        return '<strong>' . round($bytes / 1099511627776, 2) . '</strong> TB';
 }
 
 // GET FILES AND PUT INTO AN ARRAY
-$files = $directories = array();
-$handle=opendir(dirname(__FILE__));
-while (($file = readdir($handle))!==false) { $files[] = $file; }
+$files = array();
+$handle = opendir(dirname(__FILE__));
+while (false !== ($file = readdir($handle)))  
+    if (!is_dir($file) && getFileExt($file) == "xml") 
+        $files[] = $file;
 closedir($handle);
+natcasesort($files);
 
-sort($files);
-
-// GET DIRECTORIES
-foreach($files as $c => $file)
+foreach ($files as $file) 
 {
-    if(!is_dir($file)) { continue; }
-    if(in_array($file, $ignore_file_list)) { continue; }
-    if(in_array($fileExt, $ignore_ext_list)) { continue; }
-
-    //echo "<div class=\"media_block\">";
-    //echo "    <div class=\"media_block_image\"><a href=\"$file\" class=\"dir\">&nbsp;</a></div>";
-    //echo "    <div class=\"media_block_name\">\n";
-    //echo "        <div class=\"media_block_file\"><a href=\"$file\">$file</a></div>\n";
-    //echo "    </div>\n";
-    //echo "</div>";
-
-    unset($files[$c]);
-}
-
-// LOOP THE FILES
-foreach($files as $file)
-{
-    $fileExt = getFileExt($file);
-    if(in_array($file, $ignore_file_list)) { continue; }
-    if(in_array($fileExt, $ignore_ext_list)) { continue; }
-    if(is_dir($file)) { $fileExt = "dir"; }
-
     echo "<div class=\"media_block_filebox\">";
-    echo "    <a href=\"$file\"><img style=\"float: left;\" src=\"".$url."wp-content/plugins/avcp/includes/xmlicon.png\"></a>";
-    echo "        <div class=\"media_block_file\"><h2><a href=\"$file\">".str_replace(".xml", "", $file)."</a></h2></div>\n";
-    echo "        <div class=\"media_block_date\">" . format_size($file) . "<br>" . ucfirst(strftime("%d %B %Y", filemtime($file))) . "</div>\n";
+    echo "    <a href=\"$file\"><img style=\"float: left;\" src=\"" . $url . "wp-content/plugins/avcp/includes/xmlicon.png\"></a>";
+    echo "        <div class=\"media_block_file\"><h2><a href=\"$file\">" . basename($file, ".xml") ."</a></h2></div>\n";
+    echo "        <div class=\"media_block_date\">" . format_size($file) . "<br>" . ucwords(strftime("%d %B %Y", filemtime($file))) . "</div>\n";
     echo "</div>";
 }
-echo "<div class='clear'></div>";
-
+echo "<div class='clear'></div>"; 
 ?>
     </div>
     <center>
     <a href="https://wpgov.it"  target="_blank" title="WP Gov"><small>powered by</small><br><img src="<?php echo $url; ?>wp-content/plugins/avcp/includes/wpgov_icon.png"></a><br>
 
-    <small style="display:none;">Software pubblicazione bandi di gara e generazione dataset ANAC/AVCP realizzato da <a href="http://www.marcomilesi.ml" target="_blank">Marco Milesi</a></small>
+    <small style="display: none;">Software pubblicazione bandi di gara e generazione dataset ANAC/AVCP realizzato da <a href="http://www.marcomilesi.ml" target="_blank">Marco Milesi</a></small>
 
     </center>
 </body>
