@@ -225,6 +225,26 @@ add_shortcode('avcp', 'avcp_func');
 add_shortcode('anac', 'avcp_func');
 add_shortcode('gare', 'avcp_func');
 
+/*
+ * Mrz_2023_12 - Inizio
+ * Description: Aggiunto shortcode "provvDir" per generazione tabella Provvedimenti dirigenti
+ * Author: Maurizio Rosso
+ */
+function provvDir_func($atts)
+{
+    extract(shortcode_atts(array('anno' => 'all'), $atts));
+
+    ob_start();
+    include(plugin_dir_path(__FILE__) . 'tableProvvDir.php');
+    $atshortcode = ob_get_clean();
+    return $atshortcode;
+}
+add_shortcode('provvDir', 'provvDir_func');
+/*
+ * Mrz_2023_12 - Fine
+ */
+
+
 function anac_add_log($azione, $errore) {
     if ($errore) { $err = ' style="color:red;"'; } else { $err = ''; }
     update_option('anac_log', get_option('anac_log') . '<br>' . current_time('d/m/Y - H:i') . ' <strong'.$err.'>'.$azione.'</strong>');
