@@ -8,7 +8,6 @@
     register_setting( 'avcp_options', 'avcp_tab_jqueryui');
     register_setting( 'avcp_options', 'avcp_showxml');
     register_setting( 'avcp_options', 'avcp_showlove');
-    register_setting( 'avcp_options', 'avcp_invalid');
     register_setting( 'avcp_options', 'avcp_enable_editor');
     register_setting( 'avcp_options', 'avcp_abilita_ruoli');
     register_setting( 'avcp_options', 'avcp_centricosto');

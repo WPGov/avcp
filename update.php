@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
         $pluginversion = get_option('avcp_version_number');
 
         //In questo blocco sono impostati i vari aggiornamenti ad alcuni campi del database che vanno modificati per poter eseguire la versione relativa all'aggiornamento stesso...
@@ -45,6 +47,11 @@
         if (version_compare($pluginversion, "6", "<")) {
             avcp_activate();
             require_once(plugin_dir_path(__FILE__) . 'utilities/update_6.php');
+        }
+
+        if (version_compare($pluginversion, "6.4", "<")) {
+            delete_option('avcp_showlove');
+            delete_option('avcp_enable_editor');
         }
 
         anac_add_log('Script di aggiornamento '.$pluginversion.' richiamato', 0);

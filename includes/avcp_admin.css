@@ -10,11 +10,3 @@
 .at-text right {
     border: 2px solid green;
 }
-
-.wpgov-box {
-	background: url(back.png) repeat;
-	border-radius:10px;
-	box-shadow: 0px 0px 1px;
-	margin-top:20p 10px;
-	padding:20px;
-}

@@ -1,6 +1,6 @@
 <?php
 function creafilexml ($anno) {
-    anac_add_log('Inizio generazione file XML ' . $anno, 0);
+    anac_add_log('Inizio generazione XML ' . $anno, 0);
     //creafileindice();
     $avcp_denominazione_ente = get_option('avcp_denominazione_ente');
     $XML_data_aggiornamento =  date("Y-m-d");
@@ -14,14 +14,22 @@ function creafilexml ($anno) {
     endwhile; else:
     endif;
 
-    $XML_FILE .= '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+    $XML_FILE = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
     $XML_FILE .= '
     <legge190:pubblicazione xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:legge190="legge190_1_0" xsi:schemaLocation="legge190_1_0 datasetAppaltiL190.xsd">
     <metadata>
     <titolo>Pubblicazione 1 legge 190</titolo>
-    <abstract>Pubblicazione 1 legge 190 rif. 2013 M - ' . $ng . ' gare - ' . $XML_data_completa_aggiornamento . ' - Generato con WPGov ANAC XML ' . get_option('avcp_version_number') . ' di Marco Milesi</abstract>
-    <dataPubbicazioneDataset>' . $anno . '-12-31</dataPubbicazioneDataset>
-    <entePubblicatore>' . $avcp_denominazione_ente . '</entePubblicatore>
+    <abstract>Pubblicazione 1 legge 190 rif. 2013 M - ' . $ng . ' gare - ' . $XML_data_completa_aggiornamento . ' - Generato con WPGov ANAC XML ' . get_option('avcp_version_number') . ' di Marco Milesi</abstract>';
+    
+    if ( $anno > 2018 ) {
+        $XML_FILE .= '
+        <dataPubblicazioneDataset>' . $anno . '-12-31</dataPubblicazioneDataset>';
+    } else {
+        $XML_FILE .= '
+        <dataPubbicazioneDataset>' . $anno . '-12-31</dataPubbicazioneDataset>';
+    }
+
+    $XML_FILE .= '<entePubblicatore>' . $avcp_denominazione_ente . '</entePubblicatore>
     <dataUltimoAggiornamentoDataset>' . $XML_data_aggiornamento . '</dataUltimoAggiornamentoDataset>
     <annoRiferimento>' . $XML_anno_riferimento . '</annoRiferimento>
     <urlFile>' . site_url() . '/avcp/' . $anno . '.xml' . '</urlFile>
@@ -37,12 +45,12 @@ function creafilexml ($anno) {
     $avcp_contraente = get_post_meta($post->ID, 'avcp_contraente', true);
     $avcp_importo_aggiudicazione = get_post_meta($post->ID, 'avcp_aggiudicazione', true);
 
-    $avcp_data_inizio = date("Y-m-d", strtotime(get_post_meta(get_the_ID(), 'avcp_data_inizio', true)));
-    $avcp_data_ultimazione = date("Y-m-d", strtotime(get_post_meta(get_the_ID(), 'avcp_data_fine', true)));
-    //$avcp_data_inizio = get_post_meta(get_the_ID(), 'avcp_data_inizio', true);
-    //if ($avcp_data_inizio == '') { $avcp_data_inizio = '0000-00-00'; }
-    //$avcp_data_ultimazione = get_post_meta(get_the_ID(), 'avcp_data_fine', true);
-    //if ($avcp_data_ultimazione == '') { $avcp_data_ultimazione = '0000-00-00'; }
+    $d_inizio = get_post_meta(get_the_ID(), 'avcp_data_inizio', true);
+    $d_fine = get_post_meta(get_the_ID(), 'avcp_data_fine', true);
+
+    $avcp_data_inizio = $d_inizio ? date("Y-m-d", strtotime( $d_inizio ) ) : '0000-00-00';
+    $avcp_data_ultimazione = $d_fine ? date("Y-m-d", strtotime( $d_fine ) ) : '0000-00-00';
+
     $XML_FILE .= '<lotto>
     <cig>' . $avcp_cig . '</cig>
     <strutturaProponente>
@@ -50,7 +58,6 @@ function creafilexml ($anno) {
 
     $XML_FILE .= '<denominazione>' . $avcp_denominazione_ente;
 
-    $queried_term = get_query_var($taxonomy);
     $terms = get_the_terms( $post->ID, 'areesettori' );
     if ($terms) {
       foreach($terms as $term) {
@@ -58,10 +65,64 @@ function creafilexml ($anno) {
       }
     }
     $XML_FILE .= '</denominazione></strutturaProponente>
-    <oggetto>' . get_the_title() . '</oggetto>
-    <sceltaContraente>' . $avcp_contraente . '</sceltaContraente>
+    <oggetto>' . get_the_title() . '</oggetto>';
+    
+    if ( $anno >= 2019 ) { // Sostituzioni
+        $tipi_contraente = array(
+            array(
+                '03-PROCEDURA NEGOZIATA PREVIA PUBBLICAZIONE DEL BANDO',
+                '03-PROCEDURA NEGOZIATA PREVIA PUBBLICAZIONE'
+            ),
+            array(
+                '04-PROCEDURA NEGOZIATA SENZA PREVIA PUBBLICAZIONE DEL BANDO',
+                '04-PROCEDURA NEGOZIATA SENZA PREVIA PUBBLICAZIONE'
+            ),
+            array(
+                '06-PROCEDURA NEGOZIATA SENZA PREVIA INDIZIONE DI GARA ART. 221 D.LGS. 163/2006',
+                '06-PROCEDURA NEGOZIATA SENZA PREVIA INDIZIONE DI GARA (SETTORI SPECIALI)'
+            ),
+            array(
+                '06-PROCEDURA NEGOZIATA SENZA PREVIA INDIZIONE DI  GARA ART. 221 D.LGS. 163/2006',
+                '06-PROCEDURA NEGOZIATA SENZA PREVIA INDIZIONE DI GARA (SETTORI SPECIALI)'
+            ),
+            array(
+                '17-AFFIDAMENTO DIRETTO EX ART. 5 DELLA LEGGE N.381/91',
+                '17-AFFIDAMENTO DIRETTO EX ART. 5 DELLA LEGGE 381/91'
+            ),
+            array(
+                '22-PROCEDURA NEGOZIATA DERIVANTE DA AVVISI CON CUI SI INDICE LA GARA',
+                '22-PROCEDURA NEGOZIATA CON PREVIA INDIZIONE DI GARA (SETTORI SPECIALI)'
+            ),
+            array(
+                '23-AFFIDAMENTO IN ECONOMIA - AFFIDAMENTO DIRETTO',
+                '23-AFFIDAMENTO DIRETTO'
+            ),
+            array(
+                '25-AFFIDAMENTO DIRETTO A SOCIETA\' RAGGRUPPATE/CONSORZIATE O CONTROLLATE NELLE CONCESSIONI DI LL.PP',
+                '25-AFFIDAMENTO DIRETTO A SOCIETA\' RAGGRUPPATE/CONSORZIATE O CONTROLLATE NELLE CONCESSIONI E NEI PARTENARIATI            '
+            ),
+
+            array( '29', '29-PROCEDURA RISTRETTA SEMPLIFICATA'),
+            array( '30', '30-PROCEDURA DERIVANTE DA LEGGE REGIONALE'),
+            array( '31', '31-AFFIDAMENTO DIRETTO PER VARIANTE SUPERIORE AL 20% DELL\'IMPORTO CONTRATTUALE'),
+            array( '32', '32-AFFIDAMENTO RISERVATO'),
+            array( '33', '33-PROCEDURA NEGOZIATA PER AFFIDAMENTI SOTTO SOGLIA'),
+            array( '34', '34-PROCEDURA ART.16 COMMA 2-BIS DPR 380/2001 PER OPERE URBANIZZAZIONE A SCOMPUTO PRIMARIE SOTTO SOGLIA COMUNITARIA'),
+            array( '35', '35-PARTERNARIATO PER L’INNOVAZIONE'),
+            array( '36', '36-AFFIDAMENTO DIRETTO PER LAVORI, SERVIZI O FORNITURE SUPPLEMENTARI'),
+            array( '37', '37-PROCEDURA COMPETITIVA CON NEGOZIAZIONE'),
+            array( '38', '38-PROCEDURA DISCIPLINATA DA REGOLAMENTO INTERNO PER SETTORI SPECIALI')
+        );
+        foreach ( $tipi_contraente as $tc ) {
+            if ( $avcp_contraente == $tc[0] ) {
+                $avcp_contraente = $tc[1];
+                break;
+            }
+        }
+    }
+
+    $XML_FILE .= '<sceltaContraente>' . $avcp_contraente . '</sceltaContraente>
     <partecipanti>';
-    $queried_term = get_query_var($taxonomy);
     $terms = get_the_terms( $post->ID, 'ditte' );
     if ($terms) {
       foreach($terms as $term) {
@@ -115,8 +176,15 @@ function creafilexml ($anno) {
     $somme_liquidate[2016] = get_post_meta($post->ID, 'avcp_s_l_2016', true);
     $somme_liquidate[2017] = get_post_meta($post->ID, 'avcp_s_l_2017', true);
     $somme_liquidate[2018] = get_post_meta($post->ID, 'avcp_s_l_2018', true);
+    $somme_liquidate[2019] = get_post_meta($post->ID, 'avcp_s_l_2019', true);
+    $somme_liquidate[2020] = get_post_meta($post->ID, 'avcp_s_l_2020', true);
+    $somme_liquidate[2021] = get_post_meta($post->ID, 'avcp_s_l_2021', true);
+    $somme_liquidate[2022] = get_post_meta($post->ID, 'avcp_s_l_2022', true);
+    $somme_liquidate[2023] = get_post_meta($post->ID, 'avcp_s_l_2023', true);
+    $somme_liquidate[2024] = get_post_meta($post->ID, 'avcp_s_l_2024', true);
+    $somme_liquidate[2025] = get_post_meta($post->ID, 'avcp_s_l_2025', true);
 
-    for ($i = 2013; $i < 2019; $i++) {
+    for ($i = 2013; $i < 2026; $i++) {
         if ($somme_liquidate[$i] == '') {
             $somme_liquidate[$i] = '0.00';
         }
@@ -137,7 +205,7 @@ function creafilexml ($anno) {
     </legge190:pubblicazione>';
 
     // Open or create a file (this does it in the same dir as the script)
-    $XML_PATH = ABSPATH . 'avcp/' . $anno . '.xml';
+    $XML_PATH = avcp_get_basexmlpath( $anno );
     $my_file = fopen($XML_PATH, "w");
 
     // Write the string's contents into that file
@@ -147,7 +215,5 @@ function creafilexml ($anno) {
     fclose($my_file);
 
     anac_add_log('Fine generazione', 0);
-
-    avcp_valid_check();
 }
 ?>

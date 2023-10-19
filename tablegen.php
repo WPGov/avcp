@@ -18,20 +18,29 @@
 
 <?php
 
-    if ($anno=="all") { $anno=''; }
+    if ($anno == "all") {
+        $anno = '';
+    }
 
-    query_posts( array( 'post_type' => 'avcp', 'orderby' => date, 'order' => DESC, 'posts_per_page' => -1, 'annirif' => $anno) );
+    query_posts(
+        array( 'post_type' => 'avcp', 'orderby' => 'date', 'order' => 'DESC', 'posts_per_page' => -1, 'annirif' => $anno)
+    );
 
     while ( have_posts() ) : the_post();
 
         global $post;
 
+        $d_i = get_post_meta(get_the_ID(), 'avcp_data_inizio', true);
+        $d_f = get_post_meta(get_the_ID(), 'avcp_data_fine', true);
+
+        $d_i =  $d_i ? date("d/m/Y", strtotime( $d_i )) : '-';
+        $d_f =  $d_f ? date("d/m/Y", strtotime( $d_f )) : '-';
+
         echo '<tr style="display: table-row;">';
         echo '<td colspan="2"><a href="' . get_permalink() . '">' . get_the_title() . '</a></td>';
         echo '<td>' . get_post_meta($post->ID, 'avcp_cig', true) . '</td>';
         echo '<td align="center">€<strong>' . get_post_meta($post->ID, 'avcp_aggiudicazione', true) . '</strong></td>';
-        echo '<td align="center">' . date("d/m/Y", strtotime(get_post_meta(get_the_ID(), 'avcp_data_inizio', true))) . '<br/>' .
-        date("d/m/Y", strtotime(get_post_meta(get_the_ID(), 'avcp_data_fine', true))) . '<br/>';
+        echo '<td align="center">' . $d_i . '<br/>' . $d_f . '<br/>';
 
         if (function_exists('DateTime')) {
             $date1 = new DateTime(get_post_meta(get_the_ID(), 'avcp_data_inizio', true));
@@ -62,7 +71,7 @@
             <a download="' . get_bloginfo('name') . '-gare' . $anno . '.csv" href="#" onclick="return ExcellentExport.csv(this, \'gare\');"><button>CSV</button></a>
             </div>';
 
-                if (get_option('avcp_showlove') == '1') {
+                if (get_option('wpgov_show_love')) {
                     echo '<a href="http://www.wpgov.it" target="_blank" title="Software &copy; WPGov"><img src="' . plugin_dir_url(__FILE__) . 'images/wpgov.png" /></a>';
                 }
 

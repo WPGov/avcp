@@ -2,7 +2,7 @@ jQuery(document).ready(function($){
 
 	if($('#taxonomy-ditte').length>0){	
 	
-	$('#annirif-tabs').prepend('File xml in cui la gara verrà stampata<br><br>');
+	$('#annirif-tabs').prepend('File XML in cui la gara verrà stampata (autocompilato al salvataggio)<br><br>');
 	$('#areesettori-adder').hide();
 	//$("#ditte-adder").hide();
 	$('#ditte-add').prepend('<small>Il codice fiscale bisogna inserirlo dal menù "Ditte"</small><br><br>Nome/Ragione sociale:<br>');

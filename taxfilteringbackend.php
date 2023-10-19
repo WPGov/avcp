@@ -1,7 +1,6 @@
 <?php
 //FILTRI
-add_action( 'restrict_manage_posts', 'avcp_restrict_manage_posts' );
-function avcp_restrict_manage_posts() {
+add_action( 'restrict_manage_posts', function() {
     global $typenow;
     $taxonomy = 'ditte';
     if ($typenow == 'avcp') {
@@ -35,31 +34,29 @@ function avcp_restrict_manage_posts() {
             echo "</select>";
         }
     }
-}
+} );
 
-//HOOK PER LE COLONNE DELLA NUOVA VISUALIZZAZIONE AMMINISTRATORE
-
-function avcp_modify_post_table( $column ) {
+add_filter( 'manage_edit-avcp_columns', function( $column ) {
     $column['avcp_CIG'] = 'CIG';
     $column['avcp_AGG'] = 'Aggiudicatari';
+    $column['date'] = 'Data pubblicazione sul sito';
     return $column;
-}
-add_filter( 'manage_edit-avcp_columns', 'avcp_modify_post_table' );
-
-function remove_post_columns($defaults) {
-  unset($defaults['date']);
-  return $defaults;
-}
-add_filter('manage_edit-avcp_columns', 'remove_post_columns');
+} );
 
 function avcp_modify_post_table_row( $column_name, $post_id ) {
     $custom_fields = get_post_custom( $post_id );
 
     switch ($column_name) {
         case 'avcp_CIG' :
-            echo $custom_fields['avcp_cig'][0];
+            if ( isset($custom_fields['avcp_cig'][0]) ) {
+                echo $custom_fields['avcp_cig'][0];
+            } else {
+                echo '<center><font style="background-color:red;color:white;padding:2px;border-radius:3px;font-weight:bold;">Nessuno</font></center>';
+            
+            }
             break;
         case 'avcp_AGG' :
+            $checkok = 0;
             $dittepartecipanti = get_the_terms( $post_id, 'ditte' );
             $cats = get_post_meta($post_id,'avcp_aggiudicatari',true);
             if(is_array($dittepartecipanti)) {
@@ -76,7 +73,7 @@ function avcp_modify_post_table_row( $column_name, $post_id ) {
                 }
             }
             if ($checkok == 0) {
-                echo '<center><font style="background-color:red;color:white;padding:2px;border-radius:3px;font-weight:bold;font-family:verdana;">MANCANTI</font></center>';
+                echo '<center><font style="background-color:red;color:white;padding:2px;border-radius:3px;font-weight:bold;">Nessuno</font></center>';
             }
             break;
 

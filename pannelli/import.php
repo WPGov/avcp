@@ -6,21 +6,9 @@ function anac_import_load()
         set_time_limit(0);
     }
 
-    query_posts(array(
-        'post_type' => 'avcp',
-        'posts_per_page' => '-1'
-    ));
-    global $post;
-    if (have_posts()):
-        while (have_posts()):
-            the_post();
-            $down = true;
-        endwhile;
-    else:
-    endif;
-
-    if ($down) {
-        echo '<br><br><center><img src="https://wpgov.it/wp-content/uploads/2014/05/wpa_black.png"/><br><h2>Questa funzione è al momento utilizzabile solo in assenza di gare registrate</h2></center>';
+    if ( wp_count_posts( 'avcp' ) && wp_count_posts( 'avcp')->publish > 0 ) {
+        echo '<br><h2>Questa funzione è al momento utilizzabile solo in assenza di gare registrate.</h2>
+                <br>Se stai cercando una soluzione per visualizzare file xml esterni, abbiamo <a href="https://wordpress.org/plugins/anac-xml-viewer/">un\'altra soluzione</a>!';
         return;
     }
 

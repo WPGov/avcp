@@ -1,28 +1,25 @@
-﻿=== ANAC XML Bandi di Gara (AVCP) ===
+﻿=== ANAC XML Bandi di Gara ===
 Contributors: Milmor
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=F2JK36SCXKTE2
+Donate link: https://www.paypal.me/milesimarco
 Tags: anac, anticorruzione, avcp, autorita, vigilanza, lavori, pubblici, amministrazione, trasparente, legge, obblighi, marco, milesi, wpgov, pubblicazione
-Requires at least: 3.7
-Tested up to: 4.1
-Version: 6.1
-Stable tag: 6.1
+Requires at least: 4.4
+Tested up to: 6.2
+Version: 7.4
+Stable tag: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Software per la gestione dei Bandi di Gara e generazione automatica del dataset XML per ANAC (ex AVCP -Legge 190/2012 Art 1.32).
-
+Software per la gestione dei Bandi di Gara e generazione dataset XML per ANAC (ex AVCP -Legge 190/2012 Art 1.32)
 
 == Description ==
 
-ANAC XML BANDI DI GARA è un plugin WordPress pensato per le PA utile alla pubblicazione di bandi di gara ai fini della trasparenza (D.lgs 33/2013) e l'adeguamento normativo richiesto dall’Autorità Nazionale Anticorruzione (specifiche tecniche art. 1 comma 32 Legge n. 190/2012).
+ANAC XML BANDI DI GARA è un plugin WordPress per pubblicazione di bandi di gara ai fini della trasparenza delle pubbliche amministrazioni (D.lgs 33/2013) e l'adeguamento normativo richiesto dall’Autorità Nazionale Anticorruzione (specifiche tecniche art. 1 comma 32 Legge n. 190/2012).
 
 > Questo plugin non supporta i raggruppamenti temporanei di impresa
 
-**Flessibilità, **Semplicità** e **Intuitività** sono i 3 pilastri con cui è stato pensato questo software per la gestione **completa** dei bandi di gara. Sfruttando le potenzialità native del cms WordPress, questo plugin presenta un'interfaccia molto integrata adatta anche per i principianti di questa piattaforma, presentandosi come soluzione ideale per i siti della pubblica amministrazione "Powered by Wordpress" e per tutti gli enti che desiderano una soluzione gratuita, stabile, aggiornata e supportata, anche da installare in un secondo spazio come piattaforma di appoggio,
+**Flessibilità, **Semplicità** e **Intuitività** sono i 3 pilastri con cui è stato pensato questo software per la gestione **completa** dei bandi di gara. Sfruttando le potenzialità native di WordPress, questo plugin presenta un'interfaccia integrata adatta a tutti gli utenti, presentandosi come soluzione ideale per i siti della pubblica amministrazione "Powered by Wordpress" e per tutti gli enti che desiderano una soluzione gratuita, stabile, aggiornata e supportata.
 
-Un altro vantaggio di questo plugin è la facilità di installazione (che richiede più di 5 minuti) e di aggiornamento direttamente dal back-end di WordPress! Regolarmente rilasciamo patch di sicurezza, miglioramento e nuove funzioni. Il tutto scaricabile liberamente 
-
-> Più di **1200** portali della PA si appoggiano a questo plugin (dati rankwp.com), tra cui USR Lombardia e USR Veneto
+> Più di **1200** portali della PA si appoggiano a questo plugin, tra cui USR Lombardia e USR Veneto
 
 = Funzioni =
 * Creazione e gestione dei bandi di gara tramite Custom Post Type (stessa impostazione di pagine e articoli)
@@ -45,6 +42,19 @@ Oltre all'adempimento degli obblighi di legge, AVCP XML per Wordpress offre alcu
 
 = BACKUP & RIPRISTINO =
 ANAC XML permette il backup e il ripristino nativo delle voci dei bandi (per trasferimento sito Wordpress o solo per avere una copia di sicurezza). Accedendo a Strumenti -> Esporta è possibile scaricare il file xml di backup (da non confondere con quello generato per l'avcp, che ha una struttura completamente diversa). Per il ripristino delle voci in un altro sito è sufficiente caricare questo file in un'altra installazione utilizzando il menù Strumenti -> Importa
+
+= CAMBIAMENTO PATH/URL FILE =
+Il plugin integra un sistema di filtraggio per le variabili path/url dei file.
+
+`add_filter( 'anac_filter_basexmlpath', function( $string ) { // Base PATH
+    // $string = ...
+    return $string;
+}, 10, 3 );
+
+add_filter( 'anac_filter_basexmlurl', function( $string ) { // Base URL
+    // $string = ...
+    return $string;
+}, 10, 3 );`
 
 = CONTATTI & SUPPORTO =
 Per qualsiasi informazione, per segnalare problemi o per suggerire nuove funzioni, è attivo il forum di supporto su [wpgov.it/supporto](https://wpgov.it/supporto/)
@@ -73,6 +83,107 @@ Puoi trovare la documentazione su [wpgov.it](https://wpgov.it/soluzioni/avcp-xml
 
 == Changelog ==
 > Questa è la lista completa di tutti gli aggiornamenti, test e correzioni. Ogni volta che una nuova versione viene rilasciata assicuratevi di aggiornare il prima possibile per usufruire delle ultime migliorie!
+
+= 7.4 20231019 =
+* Rimosso pannello di importazione in caso di gare già pubblicate
+
+= 7.4 20230322 =
+* Risolti warning e php notice
+* Miglioramento interfaccia di validazione con ulteriori tipologie
+* Miglioramento prestazionale
+* Modifiche minori
+
+= 7.3 20230217 =
+* Aggiunta validazione specifiche 1.3 (retrocompatibile)
+* Miglioramento interfaccia di validazione
+* Miglioramento prestazionale
+* Modifiche minori
+
+= 7.2.3 20210123 =
+* **Risolto problema di salvataggio somme liquidate 2021**
+* Si invita ad aggiornare il plugin e a ricreare il file per l'anno 2021
+* In caso di comunicazioni ANAC già effettuate, non è necessario ripetere la comunicazione
+* Modifiche minori
+
+= 7.2.2 20201129 =
+* Fixed conflict with WP Attachments in some metabox configuration (backend)
+* Compatiblity check - WP 5.6
+
+= 7.2.1 20200702 =
+* **Risolto** warning PHP 7.X
+* Verificata compatibilità con ultima versione WP
+* Modifiche minori
+
+= 7.2.20200303 =
+* Aggiunti filtri per il cambiamento path/url dei file xml (vedi readme)
+
+= Versione 7.1.2 25.01.2020 =
+* Minor bugfix
+
+= Versione 7.1 13.01.2020 =
+* **LEGGERE NOTE VERSIONE 7**
+* Aggiunto supporto alle nuove modalità di affidamento della gara
+* Bugfix scelta contraente (si ringraziano Annalisa D. e Salvatore F. per il tempestivo feedback)
+
+= Versione 7 12.01.2020 =
+* Redesign completo pagina di validazione
+* Redesign e refactoring completo del metabox nella pagina di modifica della gara (ora diviso tra dettagli e somme liquidate)
+* Aggiunto supporto fino all'anno 2024, standardizzazione di codice e automatismi per supporto ad anni futuri
+* Parametrizzato sistema di get su url/path di ogni file xml per customizzazioni esterne
+* Rimossa verifica automatica per autogenerazione XML (utilizzare il centro di validazione nel menù del plugin)
+* Diversi miglioramenti e standardizzazione di codice
+* Riordinamento filtri e ottimizzazione cicli
+* Rimosso pannello **LOG** (integrato in validazione)
+
+= Versione 6.7.3 27.12.2019 =
+* Minor bugfix
+
+= Versione 6.7.2 =
+* Testato con WP 5.2
+* **Corretto** errore di ordinamento nella tabella (php7)
+* **Corretto** bug di visualizzazione somme liquidate 2019
+
+= Versione 6.7.1 22/01/2019 =
+* Modifiche visualizzazione singola, segnalazione di Francesco C.
+
+= Versione 6.7 07.01.2019 =
+* Le date ora sono in formato 0000-00-00 nel caso non sia settata
+* Testato con WP 5.X
+* Migliorato sistema di generazione file
+* Aggiunto avviso per siti .gov.it nella pagina di validazione
+
+= Versione 6.5 30.06.2017 =
+* Corretto possibile conflitto a livello template single.php
+* Miglioramenti prestazionali
+
+= Versione 6.4.1 14.02.2017 = 
+* Modifiche grafiche alla pagina di validazione
+* Aggiunto link per validazione esterna di file xml [https://anac.softcare.it/Validator](https://anac.softcare.it/Validator) a cura di [SoftCare](http://www.softcare.it/)
+
+
+= Versione 6.4 09.01.2017 =
+* **Rimossa** opzione "Mostra Editor WYSIWYG" (adesso il riquadro del contenuto dei bandi è visibile quando si crea una nuova voce: per nasconderlo utilizzare "impostazioni schermo" in alto a destra)
+* **Migliorate** le prestazioni
+* **Corretti** alcuni warning
+* **Testato** su WP 4.7
+
+= Versione 6.3 23.11.2015 =
+* Nuovo pannello impostazioni wpgov
+* Aggiunto anno 2019/2020
+* Miglioramenti minori
+
+= Versione 6.2.3 - 1.06.2015 =
+* Testato con la versione in sviluppo del cms
+
+= Versione 6.2.2 - 11.03.2015 =
+* Miglioramento stabilità e velocità
+
+= Versione 6.2.1 - 06.03.2015 =
+* Corretto conflitto con Amministrazione Trasparente
+* Miglioramenti performance
+
+= Versione 6.2 - 13.02.2015 =
+* Miglioramento modulo wpgov
 
 = Versione 6.1 - 04.02.2015 =
 * **Aggiunta** funzione javascript per evitare spazi bianchi durante inserimento Codici Fiscali

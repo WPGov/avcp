@@ -34,16 +34,9 @@ $configsettore = array(
 );
  
 $settore_taxmeta = new Tax_Meta_Class($configsettore);
-
 $settore_taxmeta->addParagraph('aree_settori_paragraph1',array('value'=> __('<font style="color:red;">I campi qui di seguito sono utili solo per ampliare le funzionalità del sito (tabella e viste varie) e NON saranno inclusi nel dataset .xml per Avcp!</font>')));
-
-//text field
 $settore_taxmeta->addText('aree_settori_cc_url',array('name'=> 'ID pagina del Settore - Centro di Costo', 'desc'=> '<p class="description">Inserire qui l\'eventuale ID della pagina del sito dedicata a questo ufficio (settore-centro di costo).</p>'));
-
-//text field
 $settore_taxmeta->addText('aree_settori_cc_responsabile',array('name'=> 'Responsabile Settore - Centro di Costo ', 'desc'=> '<p class="description">Inserire il Responsabile del Settore - Centro di Costo.</p>'));
-
-//Finish Taxonomy Extra fields Deceleration
 $settore_taxmeta->Finish();
 
 
