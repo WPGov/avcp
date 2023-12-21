@@ -227,7 +227,7 @@ add_shortcode('gare', 'avcp_func');
 
 /*
  * Mrz_2023_12 - Inizio
- * Description: Aggiunto shortcode "provvDir" per generazione tabella Provvedimenti dirigenti
+ * Description: Aggiunto shortcode "provvDir" per generazione tabella Provvedimenti Dirigenti
  * Author: Maurizio Rosso
  */
 function provvDir_func($atts)
