@@ -1,8 +1,10 @@
+<?php
 /*
  * Description: Aggiunto shortcode "provvDir" per generazione tabella Provvedimenti Dirigenti
  * Author: Maurizio Rosso
  * Date: 21/12/2023
  */
+?>
 <script type="text/javascript" src="<?php echo plugin_dir_url(__FILE__); ?>includes/excellentexport.min.js"></script>
 <table class="order-table table" id="provvDir">
         <thead>
