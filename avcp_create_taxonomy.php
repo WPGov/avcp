@@ -40,7 +40,6 @@ function avcp_58799_remove_parent_category()
     // http://example.com/wp-admin/edit-tags.php?action=edit&taxonomy=category&tag_ID=17&post_type=post
     if ( isset( $_GET['action'] ) )
         $parent = 'parent().parent()';
-
     ?>
         <script type="text/javascript">
             jQuery(document).ready(function($)

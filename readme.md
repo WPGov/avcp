@@ -6,5 +6,5 @@ Software per la gestione dei Bandi di Gara e generazione dataset XML per ANAC (e
 
 ## Credits
 
-Copyright © 2012-2024 **Marco Milesi**
+Copyright © 2012-2025 **Marco Milesi**
 www.marcomilesi.com - www.wpgov.it

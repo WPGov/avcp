@@ -4,7 +4,7 @@ Plugin Name: ANAC XML Bandi di Gara
 Plugin URI: https://wordpress.org/plugins/avcp
 Description: Generatore XML per ANAC (ex AVCP) e gestione bandi di gara e contratti (Legge 190/2012 art. 1.32 & D.Lgs 33/2013)
 Author: Marco Milesi
-Version: 7.5
+Version: 7.6
 Author URI: https://www.marcomilesi.com
 */
 
@@ -278,7 +278,6 @@ function AVCP_ADMIN_LOAD () {
     require_once(plugin_dir_path(__FILE__) . 'register_setting.php');
     require_once(plugin_dir_path(__FILE__) . 'pannelli/import.php');
 
-
     //Controllo Versione e Utilità
     $arraya_anac_v = get_plugin_data ( __FILE__ );
     $nuova_versione_anac = $arraya_anac_v['Version'];
@@ -300,7 +299,7 @@ function AVCP_ADMIN_LOAD () {
 
 function crea_anni() {
 
-    for( $x = 2013; $x <= 2025; $x++) {
+    for( $x = 2013; $x <= 2028; $x++) {
         $termcheck = term_exists( $x, 'annirif');
         if ($termcheck == 0 || $termcheck == null) {
             wp_insert_term( $x, 'annirif');
@@ -395,6 +394,5 @@ function avcp_get_basexmlpath($year = 0) {
         return $base;
     }
 }
-
 
 ?>

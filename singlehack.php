@@ -43,7 +43,7 @@ add_filter('the_content', function($content) {
 
     $prev .= '<tr><td>Importo delle somme liquidate:</td><td>';
 
-    for ($i = 2013; $i < 2025; $i++) {
+    for ($i = 2013; $i < 2028; $i++) {
         if ( get_post_meta(get_the_ID(), 'avcp_s_l_'.$i, true) > 0) {
             $prev .= '<strong>'.$i.'</strong>: '.get_post_meta(get_the_ID(), 'avcp_s_l_'.$i, true).'<br>';
         }

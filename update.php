@@ -44,11 +44,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
             delete_option('avcp_export');
         }
 
-        if (version_compare($pluginversion, "6", "<")) {
-            avcp_activate();
-            require_once(plugin_dir_path(__FILE__) . 'utilities/update_6.php');
-        }
-
         if (version_compare($pluginversion, "6.4", "<")) {
             delete_option('avcp_showlove');
             delete_option('avcp_enable_editor');

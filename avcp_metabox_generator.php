@@ -27,7 +27,7 @@ add_action('save_post', function($post_id) {
     update_post_meta(
         $post_id,
         'avcp_aggiudicazione',
-        $_POST['avcp_aggiudicazione']
+        sanitize_text_field($_POST['avcp_aggiudicazione'])
     );
   }
   $terms = get_terms( 'annirif', array('hide_empty' => 0) );
@@ -128,7 +128,7 @@ function avcp_metabox_details( $post ) {
     </p>
     <p class="meta-options hcf_field">
         <label for="avcp_aggiudicazione">Importo aggiudicazione</label>
-        <input id="avcp_aggiudicazione" type="text" name="avcp_aggiudicazione" value="<?php echo get_post_meta($post->ID, 'avcp_aggiudicazione', true); ?>">
+        <input id="avcp_aggiudicazione" type="text" name="avcp_aggiudicazione" value="<?php echo esc_attr(get_post_meta($post->ID, 'avcp_aggiudicazione', true)); ?>">
     </p>
     <p class="meta-options hcf_field" style="width:40%;">
         <label for="avcp_data_inizio">Data inizio</label>
