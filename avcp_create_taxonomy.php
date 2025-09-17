@@ -1,54 +1,77 @@
 <?php
 
-add_action( 'admin_footer-edit-tags.php', 'wpse_56569_remove_cat_tag_description' );
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
-function wpse_56569_remove_cat_tag_description(){
-    global $current_screen;
-    switch ( $current_screen->id )
-    {
-        case 'edit-ditte': ?>
-    <script type="text/javascript">
-    jQuery(document).ready( function($) {
-        $('#tag-description').parent().remove();
-    });
-    </script>
-    <?php  case 'edit-areesettori': ?>
-    <script type="text/javascript">
-    jQuery(document).ready( function($) {
-        $('#tag-description').parent().remove();
-    });
-    </script>
-    <?php  break;
+// Hide parent selector and description field for our custom taxonomies
+// Handle both edit-tags.php (list view) and term.php (individual edit)
+function avcp_hide_taxonomy_fields() {
+    // Verify we're in the admin area and have proper permissions
+    if ( ! current_user_can( 'manage_categories' ) ) {
+        return;
+    }
+    
+    // Sanitize and validate the taxonomy parameter
+    $taxonomy = isset( $_GET['taxonomy'] ) ? sanitize_key( $_GET['taxonomy'] ) : '';
+    
+    // Only run for our specific taxonomies
+    if ( ! in_array( $taxonomy, array( 'ditte', 'areesettori' ), true ) ) {
+        return;
+    }
+
+    // Check what page we're on
+    global $pagenow;
+    $is_term_edit_page = ( 'term.php' === $pagenow );
+    $is_edit_tags_page = ( 'edit-tags.php' === $pagenow );
+    
+    if ( ! $is_term_edit_page && ! $is_edit_tags_page ) {
+        return;
     }
     ?>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            <?php if ( $is_term_edit_page ) : ?>
+                // On term.php (individual term edit page)
+                $('label[for="parent"]').closest('tr').hide();
+                $('label[for="description"]').closest('tr').hide();
+                $('#description').closest('tr').hide();
+                $('.term-parent-wrap, .term-description-wrap').hide();
+            <?php elseif ( $is_edit_tags_page ) : ?>
+                <?php $is_edit_action = isset( $_GET['action'] ) && 'edit' === sanitize_key( $_GET['action'] ); ?>
+                <?php if ( $is_edit_action ) : ?>
+                    // On edit-tags.php with edit action
+                    $('label[for="parent"]').closest('tr').hide();
+                    $('label[for="description"]').closest('tr').hide();
+                    $('#description').closest('tr').hide();
+                <?php else : ?>
+                    // On edit-tags.php add new page
+                    $('label[for="parent"]').closest('.form-field').hide();
+                    $('label[for="tag-description"], label[for="description"]').closest('.form-field').hide();
+                    $('#tag-description, #description').closest('.form-field').hide();
+                <?php endif; ?>
+            <?php endif; ?>
+        });
+    </script>
+    
+    <style type="text/css">
+        /* Hide parent and description fields via CSS as backup */
+        .term-parent-wrap,
+        .term-description-wrap,
+        .form-field.term-parent-wrap,
+        .form-field.term-description-wrap {
+            display: none !important;
+        }
+    </style>
     <?php
 }
 
-add_action( 'admin_head-edit-tags.php', 'avcp_58799_remove_parent_category' );
+// Hook to multiple admin pages
+add_action( 'admin_head-edit-tags.php', 'avcp_hide_taxonomy_fields' );
+add_action( 'admin_head-term.php', 'avcp_hide_taxonomy_fields' );
 
-function avcp_58799_remove_parent_category()
-{
-    // don't run in the Tags screen
-    if ( 'ditte' != $_GET['taxonomy'] && 'areesettori' != $_GET['taxonomy'])
-        return;
 
-    // Screenshot_1 = New Category
-    // http://example.com/wp-admin/edit-tags.php?taxonomy=category
-    $parent = 'parent()';
-
-    // Screenshot_2 = Edit Category
-    // http://example.com/wp-admin/edit-tags.php?action=edit&taxonomy=category&tag_ID=17&post_type=post
-    if ( isset( $_GET['action'] ) )
-        $parent = 'parent().parent()';
-    ?>
-        <script type="text/javascript">
-            jQuery(document).ready(function($)
-            {
-                $('label[for=parent]').<?php echo $parent; ?>.remove();
-            });
-        </script>
-    <?php
-}
 
 // RIMUOVE LA COLONNA "DESCRIZIONE"
 add_filter("manage_edit-ditte_columns", 'avcp_ditte_theme_columns');
@@ -57,7 +80,7 @@ function avcp_ditte_theme_columns($theme_columns) {
         'cb' => '<input type="checkbox" />',
         'name' => __('Name'),
         'cfiscale' => 'Codice Fiscale',
-//      'description' => __('Description'),
+        'destera' => 'Ditta estera',
         'slug' => __('Slug'),
         'posts' => __('Posts')
         );
@@ -68,11 +91,26 @@ function avcp_ditte_theme_columns($theme_columns) {
 
 function add_ditte_column_content($content,$column_name,$term_id){
     switch ($column_name) {
+        case 'destera':
+            //do your stuff here with $term or $term_id
+            $t_id = $term_id;
+            $term_meta = get_tax_meta($t_id,'avcp_is_ditta_estera');
+            if ( $term_meta ) {
+                $term_return = 'Sì';
+            } else {
+                $term_return = 'No';
+            }
+            $content = $term_return;
+            break;
         case 'cfiscale':
             //do your stuff here with $term or $term_id
             $t_id = $term_id;
             $term_meta = get_option( "taxonomy_$t_id" );
-            $term_return = esc_attr( $term_meta['avcp_codice_fiscale'] );
+            if ( $term_meta && isset( $term_meta['avcp_codice_fiscale'] ) ) {
+                $term_return = esc_attr( $term_meta['avcp_codice_fiscale'] );
+            } else {
+                $term_return = '<font style="background-color:red;color:white;padding:2px;border-radius:3px;font-weight:bold;">Assente</font>';
+            }
             $content = $term_return;
             break;
         default:

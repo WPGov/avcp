@@ -38,7 +38,7 @@ add_action( 'restrict_manage_posts', function() {
 
 add_filter( 'manage_edit-avcp_columns', function( $column ) {
     $column['avcp_CIG'] = 'CIG';
-    $column['avcp_AGG'] = 'Aggiudicatari';
+    $column['avcp_check'] = 'Controllo';
     $column['date'] = 'Data pubblicazione sul sito';
     return $column;
 } );
@@ -55,7 +55,7 @@ function avcp_modify_post_table_row( $column_name, $post_id ) {
             
             }
             break;
-        case 'avcp_AGG' :
+        case 'avcp_check' :
             $checkok = 0;
             $dittepartecipanti = get_the_terms( $post_id, 'ditte' );
             $cats = get_post_meta($post_id,'avcp_aggiudicatari',true);
@@ -73,7 +73,7 @@ function avcp_modify_post_table_row( $column_name, $post_id ) {
                 }
             }
             if ($checkok == 0) {
-                echo '<center><font style="background-color:red;color:white;padding:2px;border-radius:3px;font-weight:bold;">Nessuno</font></center>';
+                 echo '<font style="background-color:red;color:white;padding:2px;border-radius:3px;font-weight:bold;">Aggiudicatari mancanti</font>';
             }
             break;
 

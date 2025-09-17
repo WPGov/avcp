@@ -195,7 +195,7 @@ function creafilexml ($anno) {
 
     $importo_liquidato_scalare = 0.00;
     for ($i = 2013; $i < $anno + 1; $i++) {
-        $importo_liquidato_scalare = number_format((float)($importo_liquidato_scalare + $somme_liquidate[$i]), 2, '.', '');
+        $importo_liquidato_scalare = number_format((float)((float)$importo_liquidato_scalare + (float)$somme_liquidate[$i]), 2, '.', '');
     }
     $XML_FILE .= $importo_liquidato_scalare;
 

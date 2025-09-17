@@ -83,12 +83,16 @@ function avcp_v_dataset_load() {
     <div class="wrap">
         <h1><?php esc_html_e( 'Validazione', 'avcp' ); ?></h1>
         <div class="notice notice-info" style="padding:20px;">
-            <?php esc_html_e( 'La funzione effettua un controllo tecnico e non attesta la correttezza dei dati.', 'avcp' ); ?><br>
+            <?php esc_html_e( 'Nota: il controllo tecnico non attesta la correttezza dei dati.', 'avcp' ); ?><br>
             <?php esc_html_e( 'Puoi controllare online i dataset con un', 'avcp' ); ?>
             <a href="https://anac.softcare.it/Validator" target="_blank" rel="noopener"><?php esc_html_e( 'validatore esterno', 'avcp' ); ?></a>
             <br><br>
             <?php esc_html_e( "L'archivio dei documenti XML generati è disponibile qui:", 'avcp' ); ?>
             <a href="<?php echo esc_url( $basexmlurl ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $basexmlurl ); ?></a>
+            <br><br>
+            <strong><?php esc_html_e( 'Risorse utili:', 'avcp' ); ?></strong><br>
+            📖 <a href="<?php echo esc_url( 'https://github.com/WPGov/avcp/wiki' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Documentazione e Wiki', 'avcp' ); ?></a> | 
+            💻 <a href="<?php echo esc_url( 'https://github.com/WPGov/avcp' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Repository GitHub', 'avcp' ); ?></a>
         </div>
 
         <div id="poststuff">
@@ -97,25 +101,61 @@ function avcp_v_dataset_load() {
                     <div class="meta-box-sortables">
                         <div class="inside">
                             <?php
-                            // Check for posts without year
-                            $args = array(
+                            // Check for posts without year (annirif) and collect them
+                            $offending_posts = array();
+                            $post_ids = get_posts( array(
                                 'post_type'      => 'avcp',
                                 'posts_per_page' => -1,
                                 'fields'         => 'ids',
-                            );
-                            $query = new WP_Query( $args );
-                            $erroreanno = false;
-                            $ng = 0;
-                            if ( $query->have_posts() ) {
-                                foreach ( $query->posts as $post_id ) {
-                                    $ng++;
-                                    if ( ! has_term( '', 'annirif', $post_id ) ) {
-                                        $erroreanno = true;
+                                'post_status'    => 'any',
+                            ) );
+                            if ( ! empty( $post_ids ) ) {
+                                foreach ( $post_ids as $post_id ) {
+                                    if ( !has_term( '', 'annirif', $post_id ) ) {
+                                        $offending_posts[] = $post_id;
                                     }
                                 }
                             }
-                            if ( $erroreanno ) {
-                                echo '<div class="notice notice-error"><p><strong>' . esc_html__( 'Una o più gare sono registrate senza anno di riferimento. Correggere!', 'avcp' ) . '</strong></p></div>';
+                            if ( count( $offending_posts ) > 0 ) {
+                                $message = sprintf( esc_html__( 'Ci sono %d gare registrate senza anno di riferimento da correggere!', 'avcp' ), number_format_i18n( count( $offending_posts ) ) );
+                                echo '<div class="notice notice-error"><p><strong>' . esc_html( $message ) . '</strong></p>';
+                                echo '<ul style="margin:8px 0 12px 18px;">';
+                                foreach ( $offending_posts as $id ) {
+                                    $title_esc = esc_html( get_the_title( $id ) );
+                                    if ( !$title_esc ) {
+                                        $title_esc = esc_html__( '(Nessun titolo)', 'avcp' );
+                                    }
+                                    echo '<li><a href="' . get_edit_post_link( $id ) . '">' . $title_esc . '</a></li>';
+                                }
+                                echo '</ul></div>';
+                            }
+
+                            // Check for 'ditte' terms missing 'avcp_codice_fiscale' term meta and collect them                            $offending_ditte = array();
+                            $ditte_terms = get_terms( array(
+                                'taxonomy'   => 'ditte',
+                                'hide_empty' => false,
+                            ) );
+                            if ( ! is_wp_error( $ditte_terms ) && ! empty( $ditte_terms ) ) {
+                                foreach ( $ditte_terms as $dterm ) {
+                                    $codice = get_term_meta( $dterm->term_id, 'avcp_codice_fiscale', true );
+                                    if ( empty( $codice ) ) {
+                                        $offending_ditte[] = $dterm->term_id;
+                                    }
+                                }
+                            }
+                            if ( count( $offending_ditte) > 0 ) {
+                                $msg2 = sprintf( esc_html__( 'Ci sono %d ditte senza codice fiscale da correggere!', 'avcp' ), number_format_i18n( count( $offending_ditte) ) );
+                                echo '<div class="notice notice-error"><p><strong>' . esc_html( $msg2 ) . '</strong></p>';
+                                echo '<ul style="margin:8px 0 12px 18px;">';
+                                foreach ( $offending_ditte as $id ) {
+                                    $name_esc = esc_html( get_term( $id )->name );
+                                    if ( !$name_esc ) {
+                                        $name_esc = esc_html__( '(Nessun nome)', 'avcp' );
+                                    }
+                                    $link_esc = esc_url( get_edit_term_link( $id, 'ditte' ) );
+                                    echo '<li><a href="' . $link_esc . '">' . $name_esc . '</a></li>';
+                                }
+                                echo '</ul></div>';
                             }
                             $terms = get_terms( 'annirif', array('hide_empty' => 0) );
                             ?>
@@ -300,7 +340,7 @@ function avcp_v_dataset_load() {
                                 if ( $system_ok ) {
                                     echo '<hr><center>' . esc_html__( 'Nessun problema trovato.', 'avcp' ) . '</center>';
                                 } else {
-                                    echo '<div class="notice notice-error"><p>' . esc_html__( 'Sono stati trovati alcuni problemi critici. Affinchè AVCP funzioni correttamente è necessario risolvere al più presto questi problemi. Consultare la documentazione del plugin per conoscere le cause più probabili di questo problema!', 'avcp' ) . '</p></div>';
+                                    echo '<div class="notice notice-error"><p>' . esc_html__( 'Sono stati trovati alcuni problemi critici. Affinchè AVCP funzioni correttamente è necessario risolvere al più presto questi problemi.', 'avcp' ) . '</p></div>';
                                 }
                                 ?>
                                 </p>

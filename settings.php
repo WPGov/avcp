@@ -3,11 +3,6 @@ if ( ! function_exists( 'is_plugin_active' ) ) {
     require_once ABSPATH . '/wp-admin/includes/plugin.php';
 }
 
-if ( ! is_plugin_active( 'avcp/avcp.php' ) ) {
-    echo '<div class="notice notice-error"><p>' . esc_html__( 'Plugin non installato!', 'avcp' ) . '</p></div>';
-    return;
-}
-
 // Handle form submission securely
 if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     // Check nonce and user capability
@@ -31,6 +26,7 @@ if ( $_SERVER['REQUEST_METHOD'] === 'POST' ) {
     update_option( 'avcp_dis_styledbackend', isset( $_POST['avcp_dis_styledbackend_n'] ) ? '0' : '1' );
     update_option( 'avcp_centricosto', isset( $_POST['avcp_centricosto_n'] ) ? '0' : '1' );
     update_option( 'avcp_abilita_ruoli', isset( $_POST['avcp_abilita_ruoli_n'] ) ? '1' : '0' );
+    update_option( 'wpgov_show_love', isset( $_POST['wpgov_show_love_n'] ) ? '1' : '0' );
 
     echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Impostazioni aggiornate.', 'avcp' ) . '</p></div>';
 }
@@ -44,6 +40,7 @@ $centricosto          = get_option( 'avcp_centricosto', '1' );
 $dis_archivioditte    = get_option( 'avcp_dis_archivioditte', '1' );
 $dis_archivioanni     = get_option( 'avcp_dis_archivioanni', '1' );
 $abilita_ruoli        = get_option( 'avcp_abilita_ruoli', '0' );
+$wpgov_show_love      = get_option( 'wpgov_show_love', '0' );
 
 ?>
 
@@ -59,6 +56,11 @@ $abilita_ruoli        = get_option( 'avcp_abilita_ruoli', '0' );
                 '<a href="' . esc_url( 'https://www.wpgov.it' ) . '" target="_blank" rel="noopener">WPGov.it</a>'
             );
             ?>
+        </p>
+        <p>
+            <strong><?php esc_html_e( 'Risorse utili:', 'avcp' ); ?></strong><br>
+            📖 <a href="<?php echo esc_url( 'https://github.com/WPGov/avcp/wiki' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Documentazione e Wiki', 'avcp' ); ?></a><br>
+            💻 <a href="<?php echo esc_url( 'https://github.com/WPGov/avcp' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Repository GitHub', 'avcp' ); ?></a>
         </p>
     </div>
 
@@ -112,6 +114,13 @@ $abilita_ruoli        = get_option( 'avcp_abilita_ruoli', '0' );
                 <td>
                     <input type="checkbox" id="avcp_dis_archivioanni_n" name="avcp_dis_archivioanni_n" <?php checked( $dis_archivioanni, '0' ); ?> />
                     <span class="description"><?php esc_html_e( "Abilita i link con la visualizzazione archivio su base annuale dei bandi", 'avcp' ); ?></span>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="wpgov_show_love_n"><?php esc_html_e( 'Mostra Logo WPGov', 'avcp' ); ?></label></th>
+                <td>
+                    <input type="checkbox" id="wpgov_show_love_n" name="wpgov_show_love_n" <?php checked( $wpgov_show_love, '1' ); ?> />
+                    <span class="description"><?php esc_html_e( "Mostra il logo WPGov nelle pagine dei bandi per supportare il progetto", 'avcp' ); ?></span>
                 </td>
             </tr>
         </table>

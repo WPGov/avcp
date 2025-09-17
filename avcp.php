@@ -4,7 +4,7 @@ Plugin Name: ANAC XML Bandi di Gara
 Plugin URI: https://wordpress.org/plugins/avcp
 Description: Generatore XML per ANAC (ex AVCP) e gestione bandi di gara e contratti (Legge 190/2012 art. 1.32 & D.Lgs 33/2013)
 Author: Marco Milesi
-Version: 7.6
+Version: 7.7
 Author URI: https://www.marcomilesi.com
 */
 
@@ -189,6 +189,7 @@ function save_at_gara_posts($post_id) {
 
         $terms = wp_get_post_terms($post_id, 'annirif');
 
+        $verificafilecreati = '';
         if ( count($terms) > 0 ) {
             //require_once(plugin_dir_path(__FILE__) . 'avcp_xml_generator.php');
             foreach ( $terms as $term ) {
@@ -269,13 +270,44 @@ add_action('admin_enqueue_scripts', function( $hook ) {
     }
 });
 
+add_action('admin_notices', function() {
+    global $current_user ;
+    global $current_screen;
+    $user_id = $current_user->ID;
+
+    if (get_option('avcp_denominazione_ente')  == null || get_option('avcp_codicefiscale_ente') == null) {
+        echo '<div class="error"><p><strong>ANAC XML</strong>: alcuni dati dell\'ente non sono stati specificati in <strong>WPGov.it >> XML Bandi di Gara</strong></b></a></div>';
+    }
+
+    if ( 'ditte' == $current_screen->taxonomy ) {
+        echo '<div class="updated"><p>Attenzione: ogni modifica effettuata a una ditta si applica anche alle gare già pubblicate!<br/>Nel caso di cambio partita iva o denominazione, creare una nuova ditta.</p></div>';
+    } else if ( 'areesettori' == $current_screen->taxonomy ) {
+        echo '<div class="updated"><p>Attenzione: ogni modifica effettuata a un settore-centro di costo si applica anche alle gare già pubblicate!</p></div>';
+    }
+});
+
 add_action( 'admin_init', 'AVCP_ADMIN_LOAD');
 function AVCP_ADMIN_LOAD () {
 
     require_once(plugin_dir_path(__FILE__) . 'taxfilteringbackend.php');
+    
+    register_setting( 'avcp_options', 'avcp_version_number');
+    register_setting( 'avcp_options', 'avcp_denominazione_ente');
+    register_setting( 'avcp_options', 'avcp_codicefiscale_ente');
+    register_setting( 'avcp_options', 'avcp_autopublish');
+    register_setting( 'avcp_options', 'avcp_dis_archivioditte');
+    register_setting( 'avcp_options', 'avcp_dis_archivioanni');
+    register_setting( 'avcp_options', 'avcp_tab_jqueryui');
+    register_setting( 'avcp_options', 'avcp_showxml');
+    register_setting( 'avcp_options', 'avcp_showlove');
+    register_setting( 'avcp_options', 'avcp_enable_editor');
+    register_setting( 'avcp_options', 'avcp_abilita_ruoli');
+    register_setting( 'avcp_options', 'avcp_centricosto');
+    register_setting( 'avcp_options', 'avcp_export');
+    register_setting( 'avcp_options', 'avcp_dataset_capability');
 
-    require_once(plugin_dir_path(__FILE__) . 'alerts.php');
-    require_once(plugin_dir_path(__FILE__) . 'register_setting.php');
+    
+
     require_once(plugin_dir_path(__FILE__) . 'pannelli/import.php');
 
     //Controllo Versione e Utilità
