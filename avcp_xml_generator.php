@@ -186,8 +186,10 @@ function creafilexml ($anno) {
     $somme_liquidate[2026] = get_post_meta($post->ID, 'avcp_s_l_2026', true);
     $somme_liquidate[2027] = get_post_meta($post->ID, 'avcp_s_l_2027', true);
     $somme_liquidate[2028] = get_post_meta($post->ID, 'avcp_s_l_2028', true);
+    $somme_liquidate[2029] = get_post_meta($post->ID, 'avcp_s_l_2029', true);
+    $somme_liquidate[2030] = get_post_meta($post->ID, 'avcp_s_l_2030', true);
 
-    for ($i = 2013; $i < 2026; $i++) {
+    for ($i = 2013; $i <= 2030; $i++) {
         if ($somme_liquidate[$i] == '') {
             $somme_liquidate[$i] = '0.00';
         }

@@ -44,7 +44,7 @@ add_action('save_post', function($post_id) {
     }
   }
   if (array_key_exists('avcp_data_inizio', $_POST)) {
-    if ( date("Y", strtotime( $_POST['avcp_data_inizio'] )) > 2012 && date("Y", strtotime( $_POST['avcp_data_inizio'] )) < 2030  ) {
+    if ( date("Y", strtotime( $_POST['avcp_data_inizio'] )) > 2012 && date("Y", strtotime( $_POST['avcp_data_inizio'] )) <= 2030  ) {
       wp_set_object_terms( $post_id, date("Y", strtotime( $_POST['avcp_data_inizio'] ) ), 'annirif', true );
     }
     update_post_meta(
@@ -54,7 +54,7 @@ add_action('save_post', function($post_id) {
     );
   }
   if (array_key_exists('avcp_data_fine', $_POST)) {
-    if ( date("Y", strtotime( $_POST['avcp_data_fine'] )) > 2012 && date("Y", strtotime( $_POST['avcp_data_fine'] )) < 2030 ) {
+    if ( date("Y", strtotime( $_POST['avcp_data_fine'] )) > 2012 && date("Y", strtotime( $_POST['avcp_data_fine'] )) <= 2030 ) {
       wp_set_object_terms( $post_id, date("Y", strtotime( $_POST['avcp_data_fine'] ) ), 'annirif', true );
     }
     update_post_meta(

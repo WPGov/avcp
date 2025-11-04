@@ -84,6 +84,11 @@ Puoi trovare la documentazione su [wpgov.it](https://wpgov.it/soluzioni/avcp-xml
 == Changelog ==
 > Questa è la lista completa di tutti gli aggiornamenti, test e correzioni. Ogni volta che una nuova versione viene rilasciata assicuratevi di aggiornare il prima possibile per usufruire delle ultime migliorie!
 
+= 7.7.1 2025-11-04 =
+* Aggiunto supporto nativo nuove annate (2029+2030)
+* Miglioramento sicurezza
+* Ottimizzazione delle performance e correzione bug
+
 = 7.7 20250917 =
 * Migliorata gestione importi e errori
 * Miglioramento sicurezza
