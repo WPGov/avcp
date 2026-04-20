@@ -137,7 +137,12 @@ function avcp_v_dataset_load() {
                             ) );
                             if ( ! is_wp_error( $ditte_terms ) && ! empty( $ditte_terms ) ) {
                                 foreach ( $ditte_terms as $dterm ) {
-                                    $codice = get_term_meta( $dterm->term_id, 'avcp_codice_fiscale', true );
+                                    $term_meta = get_option( "taxonomy_$dterm->term_id" );
+                                    $codice = ( is_array( $term_meta ) && isset( $term_meta['avcp_codice_fiscale'] ) ) ? $term_meta['avcp_codice_fiscale'] : '';
+                                    // Fallback: check term meta (standard WP storage)
+                                    if ( empty( $codice ) ) {
+                                        $codice = get_term_meta( $dterm->term_id, 'avcp_codice_fiscale', true );
+                                    }
                                     if ( empty( $codice ) ) {
                                         $offending_ditte[] = $dterm->term_id;
                                     }
